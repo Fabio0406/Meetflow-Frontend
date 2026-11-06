@@ -1,27 +1,63 @@
-# React + TypeScript + Vite
+# MeetFlow Frontend — Editor colaborativo de diagramas de secuencia UML
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend web para crear **diagramas de secuencia UML** de forma colaborativa. Los usuarios crean "reuniones" con un código, invitan a otros y editan el mismo diagrama en tiempo real; el resultado puede exportarse como imagen SVG o guardarse en el servidor.
 
-Currently, two official plugins are available:
+> Proyecto académico — Ingeniería de Software I, UAGRM (2024).
+> El backend (API + Socket.IO) está en el repositorio [Meetflow-Backend](https://github.com/Fabio0406/Meetflow-Backend) y se desplegó en Railway.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Funcionalidades
 
-## Expanding the ESLint configuration
+- Registro, inicio de sesión y configuración de la cuenta.
+- Página principal con los diagramas del usuario.
+- Creación de **reuniones** (salas) con código de acceso, en `/reunion/:id/:codigo`.
+- **Edición en tiempo real** con Socket.IO: los cambios de cada usuario se transmiten al resto.
+- Diagrama de secuencia con **líneas de vida, activaciones y mensajes**, dibujado con GoJS.
+- Exportación del diagrama a **SVG** e importación desde JSON.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Tecnologías
 
-- Configure the top-level `parserOptions` property like this:
+- React 18 + TypeScript + Vite
+- GoJS / gojs-react (diagramas)
+- Socket.IO client
+- Material UI, styled-components, Tailwind CSS
+- Axios, React Router, js-cookie, file-saver
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+## Estructura
+
+```
+src/
+├── App.tsx               # Rutas
+├── axiosInstance.tsx     # Cliente HTTP (URL del backend)
+├── UserContext.tsx       # Sesión del usuario
+├── components/           # header, topbar, footer, posts
+└── view/
+    ├── DiagramWrapper.tsx  # Plantillas GoJS del diagrama de secuencia
+    ├── Diagram/            # Utilidades de arrastre
+    ├── Reunion/            # Sala colaborativa
+    ├── write/              # Crear / unirse a una reunión
+    ├── homepage/, login/, register/, settings/
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Requisitos
+
+- Node.js 18 o superior
+- El backend [Meetflow-Backend](https://github.com/Fabio0406/Meetflow-Backend) en ejecución
+
+## Instalación
+
+```bash
+npm install
+npm run dev
+```
+
+La URL del backend se configura en `src/axiosInstance.tsx` y en las conexiones de Socket.IO dentro de `src/view/`.
+
+## Rutas
+
+| Ruta | Descripción |
+|---|---|
+| `/` , `/posts` | Inicio |
+| `/register` , `/login` | Registro e inicio de sesión |
+| `/diagramas` | Crear o unirse a una reunión |
+| `/reunion/:id/:codigo` | Editor colaborativo |
+| `/settings` | Configuración de la cuenta |
